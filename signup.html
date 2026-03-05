@@ -8,15 +8,24 @@
 <body>
 <section class="auth-container">
   <h1>Sign Up</h1>
-  <form id="signupForm">
-    <input type="text" id="signupName" placeholder="Full Name" required>
-    <input type="email" id="signupEmail" placeholder="Email" required>
-    <input type="password" id="signupPassword" placeholder="Password" required>
-    <input type="text" id="signupWallet" placeholder="Bitcoin Wallet Address" required>
+  <form class="signup-form">
+
+    <input type="text" placeholder="Full Name" required>
+
+    <input type="email" placeholder="Email" required>
+
+    <input type="password" placeholder="Password" required>
+
+    <input type="text" placeholder="Bitcoin Wallet Address" required>
+
     <button type="submit">Create Account</button>
-  </form>
-  <p>Already have an account? <a href="login.html">Login here</a></p>
-  <p id="signupMessage"></p>
+
+</form>
+
+<p class="login-link">
+    Already have an account? 
+    <a href="login.html">Login here</a>
+</p>
 </section>
 
 <script>
