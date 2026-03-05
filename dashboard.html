@@ -2,39 +2,43 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>QuickBTC Dashboard</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
- <nav>
-    <a href="dashboard.html">Home</a> |
-    <a href="about.html">About</a> |
-    <a href="terms.html">Terms</a> |
-    <a href="contact.html">Contact</a>
-</nav> 
-  <p style="color:green;">🟢 Secure • Trusted • Fast Bitcoin Loans</p>
+<!-- NAVIGATION -->
 <header class="nav">
   <img src="images/logo.png" class="logo">
+  <nav class="top-nav">
+    <a href="dashboard.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="terms.html">Terms</a>
+    <a href="contact.html">Contact</a>
+  </nav>
   <button onclick="scrollToSection('dashboardSection')">Dashboard</button>
 </header>
 
+<p class="status-banner" style="color:green;">🟢 Secure • Trusted • Fast Bitcoin Loans</p>
+
+<!-- DASHBOARD SECTION -->
 <section class="dashboard" id="dashboardSection">
   <h1>Welcome, <span id="userName"></span>!</h1>
 
   <div class="loan-summary">
     <h2>Loan Summary</h2>
-    <p><strong>Total Loan:</strong> $<span id="loanAmount"></span></p>
-    <p><strong>Collateral Paid:</strong> $<span id="collateralPaid"></span></p>
-    <p><strong>Remaining Balance:</strong> $<span id="remainingLoan"></span></p>
-    <p><strong>BTC Equivalent:</strong> <span id="btcEquivalent"></span> BTC</p>
-    <p><strong>Repayment Due Date:</strong> <span id="repaymentDue"></span></p>
+    <p><strong>Total Loan:</strong> $<span id="loanAmount">0.00</span></p>
+    <p><strong>Collateral Paid:</strong> $<span id="collateralPaid">0.00</span></p>
+    <p><strong>Remaining Balance:</strong> $<span id="remainingLoan">0.00</span></p>
+    <p><strong>BTC Equivalent:</strong> <span id="btcEquivalent">0.0000</span> BTC</p>
+    <p><strong>Repayment Due Date:</strong> <span id="repaymentDue">Loading...</span></p>
 
     <div class="repayment-bar">
       <div class="repayment-progress" id="repaymentProgress"></div>
     </div>
 
-    <button onclick="openPaymentModal()">Pay Now</button>
+    <button class="pay-btn" onclick="openPaymentModal()">Pay Now</button>
   </div>
 
   <div class="btc-price">
@@ -42,8 +46,8 @@
     <p id="btcPrice">Loading...</p>
   </div>
 </section>
-  
-<!-- Payment Modal -->
+
+<!-- PAYMENT MODAL -->
 <div class="modal" id="paymentModal">
   <div class="modal-content">
     <span class="close" onclick="closePaymentModal()">&times;</span>
@@ -65,4 +69,4 @@
 
 <script src="dashboard.js"></script>
 </body>
-</html>
+      </html>
