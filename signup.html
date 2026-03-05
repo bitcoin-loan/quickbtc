@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sign Up - QuickBTC</title>
   <link rel="stylesheet" href="styles.css">
@@ -30,7 +31,6 @@
     Already have an account?
     <a href="login.html">Login here</a>
   </p>
-
 </section>
 
 <script>
@@ -40,32 +40,37 @@ const message = document.getElementById("signupMessage");
 form.addEventListener("submit", function(e){
   e.preventDefault();
 
-  const name = document.getElementById("name").value.trim();
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value;
-  const wallet = document.getElementById("wallet").value.trim();
+  const name = document.getElementById("signupName").value.trim();
+  const email = document.getElementById("signupEmail").value.trim();
+  const password = document.getElementById("signupPassword").value;
+  const wallet = document.getElementById("signupWallet").value.trim();
 
-  // Simple validation
-  if (wallet.length < 26 || wallet.length > 62) {
+  // Validate wallet address
+  if(wallet.length < 26 || wallet.length > 62){
     message.innerText = "❌ Invalid Bitcoin wallet address";
     return;
   }
 
-  // Save user to localStorage (simulate database)
+  // Get users from localStorage
   const users = JSON.parse(localStorage.getItem("users") || "[]");
-  
+
   // Check if email already exists
-  if (users.find(u => u.email === email)) {
+  if(users.some(u => u.email === email)){
     message.innerText = "❌ Email already registered";
     return;
   }
 
-  users.push({ name, email, password, wallet, loans: [] });
+  // Save new user
+  users.push({name, email, password, wallet, loans: []});
   localStorage.setItem("users", JSON.stringify(users));
 
-  message.innerText = "✅ Sign up successful! Redirecting...";
-  
+  message.innerText = "✅ Account created! Redirecting...";
+
   setTimeout(() => {
     window.location.href = "login.html";
   }, 1500);
 });
+</script>
+
+</body>
+</html>
