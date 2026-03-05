@@ -6,62 +6,79 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
 <section class="auth-container">
-  <h1>Sign Up</h1>
-  <form class="signup-form">
+  <h1>Create Your Account</h1>
 
-    <input type="text" placeholder="Full Name" required>
+  <form id="signupForm" class="signup-form">
 
-    <input type="email" placeholder="Email" required>
+    <input type="text" id="signupName" placeholder="Full Name" required>
 
-    <input type="password" placeholder="Password" required>
+    <input type="email" id="signupEmail" placeholder="Email Address" required>
 
-    <input type="text" placeholder="Bitcoin Wallet Address" required>
+    <input type="password" id="signupPassword" placeholder="Password" required>
+
+    <input type="text" id="signupWallet" placeholder="Bitcoin Wallet Address" required>
 
     <button type="submit">Create Account</button>
 
-</form>
+    <p id="signupMessage" class="form-message"></p>
 
-<p class="login-link">
-    Already have an account? 
+  </form>
+
+  <p class="login-link">
+    Already have an account?
     <a href="login.html">Login here</a>
-</p>
+  </p>
+
 </section>
 
 <script>
-const signupForm = document.getElementById("signupForm");
-signupForm.addEventListener("submit", (e) => {
+document.getElementById("signupForm").addEventListener("submit", function(e) {
   e.preventDefault();
 
   const name = document.getElementById("signupName").value.trim();
   const email = document.getElementById("signupEmail").value.trim();
   const password = document.getElementById("signupPassword").value;
   const wallet = document.getElementById("signupWallet").value.trim();
+  const message = document.getElementById("signupMessage");
 
-  // Validate wallet
-  if(wallet.length < 26 || wallet.length > 62){
-    document.getElementById("signupMessage").innerText = "❌ Invalid Bitcoin wallet address";
+  // Basic wallet validation
+  if (wallet.length < 26 || wallet.length > 62) {
+    message.innerText = "❌ Invalid Bitcoin wallet address.";
+    message.style.color = "red";
     return;
   }
 
-  // Get existing users from localStorage
+  // Get stored users
   const users = JSON.parse(localStorage.getItem("users") || "[]");
 
   // Check if email already exists
-  if(users.some(u => u.email === email)){
-    document.getElementById("signupMessage").innerText = "❌ Email already registered";
+  if (users.some(user => user.email === email)) {
+    message.innerText = "❌ Email already registered.";
+    message.style.color = "red";
     return;
   }
 
-  // Add new user
-  users.push({name, email, password, wallet, loans: []});
+  // Save new user
+  users.push({
+    name: name,
+    email: email,
+    password: password,
+    wallet: wallet,
+    loans: []
+  });
+
   localStorage.setItem("users", JSON.stringify(users));
 
-  document.getElementById("signupMessage").innerText = "✅ Account created! Redirecting to login...";
+  message.innerText = "✅ Account created successfully! Redirecting...";
+  message.style.color = "green";
+
   setTimeout(() => {
     window.location.href = "login.html";
   }, 1500);
 });
 </script>
+
 </body>
 </html>
