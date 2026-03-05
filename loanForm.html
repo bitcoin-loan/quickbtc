@@ -2,41 +2,91 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Apply for QuickBTC Loan</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
+<!-- NAVIGATION -->
 <header class="nav">
   <img src="images/logo.png" class="logo">
   <button onclick="window.location.href='index.html'">Home</button>
 </header>
 
+<!-- COLLATERAL CALCULATOR -->
 <section class="calculator">
   <h2>Collateral Calculator</h2>
-  <p>Use the slider to choose your loan amount. Collateral (10%) updates instantly in USD and BTC.</p>
-  <input type="range" id="loanSlider" min="50" max="1000" step="10" value="100" />
+  <p>Use the slider to select your loan amount. Collateral (10%) updates instantly in USD and BTC.</p>
+  
+  <input type="range" id="loanSlider" min="50" max="1000" step="10" value="100">
+  
   <p>Loan Amount: $<span id="loanAmountDisplay">100</span></p>
   <p id="collateralResult">Collateral to pay: $10.00 (~0.0005 BTC)</p>
 </section>
 
+<!-- LOAN APPLICATION FORM -->
 <section class="form-section" id="loanForm">
   <h2>Apply Now</h2>
 
-  <form onsubmit="event.preventDefault(); saveAndGoToPayment();">
-    <input type="text" id="name" placeholder="Your Name" required>
-    <input type="email" id="email" placeholder="Your Email" required>
+  <form id="loanApplicationForm">
+
+    <input type="text" id="name" placeholder="Your Full Name" required>
+    <input type="email" id="email" placeholder="Your Email Address" required>
+
     <p style="font-size: 14px; color: #ccc;">
       Enter your Bitcoin wallet address carefully. This is where your loan will be sent.
     </p>
-    <input type="text" id="wallet" placeholder="Your Bitcoin Wallet Address" required>
+    <input type="text" id="wallet" placeholder="Bitcoin Wallet Address" required>
+
     <button type="submit">Submit Request</button>
     <button type="button" onclick="saveAndGoToPayment()">Pay Collateral</button>
   </form>
 
-  <p id="message"></p>
+  <p id="message" class="form-message"></p>
 </section>
 
-<script src="script.js"></script>
+<script>
+  const loanForm = document.getElementById("loanApplicationForm");
+  const message = document.getElementById("message");
+
+  // Update collateral dynamically
+  const slider = document.getElementById("loanSlider");
+  const loanDisplay = document.getElementById("loanAmountDisplay");
+  const collateralDisplay = document.getElementById("collateralResult");
+
+  slider.addEventListener("input", () => {
+    const loanAmount = parseFloat(slider.value);
+    const collateral = (loanAmount * 0.10).toFixed(2);
+    const btc = (collateral / 20000).toFixed(6); // Example BTC rate
+    loanDisplay.innerText = loanAmount;
+    collateralDisplay.innerText = `Collateral to pay: $${collateral} (~${btc} BTC)`;
+  });
+
+  // Form submission
+  loanForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const wallet = document.getElementById("wallet").value.trim();
+
+    // Basic validation
+    if(wallet.length < 26 || wallet.length > 62){
+      message.innerText = "❌ Invalid Bitcoin wallet address";
+      return;
+    }
+
+    // Save to localStorage as temporary DB
+    const loans = JSON.parse(localStorage.getItem("loans") || "[]");
+    loans.push({ name, email, wallet, amount: slider.value, collateral: (slider.value*0.10).toFixed(2) });
+    localStorage.setItem("loans", JSON.stringify(loans));
+
+    message.innerText = "✅ Loan request submitted! Redirecting to payment...";
+    setTimeout(() => {
+      saveAndGoToPayment(); // Call your existing function
+    }, 1500);
+  });
+</script>
+
 </body>
 </html>
