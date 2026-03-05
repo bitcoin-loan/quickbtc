@@ -519,20 +519,3 @@ button {
     }
 }
 
-nav {
-    display: flex;
-    justify-content: space-between;
-    padding: 15px;
-    background: #111;
-}
-
-nav img {
-    max-width: 120px;
-}
-
-@media (max-width: 600px) {
-    nav {
-        flex-direction: column;
-        align-items: center;
-    }
-}
