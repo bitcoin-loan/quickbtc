@@ -2,53 +2,58 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Complete Payment</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Complete Payment - QuickBTC</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
+<header class="nav">
+  <img src="images/logo.png" class="logo">
+  <button onclick="window.location.href='index.html'">Home</button>
+</header>
+
 <section class="payment-container">
 
   <h1>Complete Your Collateral Payment</h1>
-
-<p class="status">Waiting for your payment...</p>
-
-<p class="note">
-  After sending payment, upload your receipt below.  
-  Your loan will be processed within 5–15 minutes after confirmation.
-</p>
-
-  <p class="warning">
-    ⚠️ Send the exact Bitcoin amount to the address below
+  
+  <p class="status">🟢 Waiting for your payment...</p>
+  
+  <p class="note">
+    After sending payment, upload your receipt below.  
+    Your loan will be processed within 5–15 minutes after confirmation.
   </p>
-
+  
+  <p class="warning">⚠️ Send the exact Bitcoin amount to the address below</p>
+  
   <!-- BTC ADDRESS -->
   <div class="address-box">
     <p>Bitcoin Address:</p>
     <h3 id="btcAddress">bc1qu9d6lv4rvkdkh34t8kk4ge0egc7r2m954tc2jq</h3>
     <button onclick="copyAddress()">Copy Address</button>
   </div>
-
+  
   <!-- QR CODE -->
   <div class="qr">
-    <img src="images/btc-qr.png" alt="QR Code">
+    <img src="images/btc-qr.png" alt="BTC QR Code">
   </div>
-
-  <div class="payment-info">
-  <h2>Complete Your Payment</h2>
-  <p><strong>Name:</strong> <span id="pName"></span></p>
-  <p><strong>Email:</strong> <span id="pEmail"></span></p>
-  <p><strong>Loan Amount:</strong> $<span id="pLoan"></span></p>
-  <p><strong>Collateral (10%):</strong> $<span id="pCollateral"></span></p>
-  <p><strong>BTC Equivalent:</strong> <span id="pBTC"></span> BTC</p>
-</div>
   
-  <!-- COUNTDOWN -->
+  <!-- PAYMENT DETAILS -->
+  <div class="payment-info">
+    <h2>Payment Details</h2>
+    <p><strong>Name:</strong> <span id="pName">Loading...</span></p>
+    <p><strong>Email:</strong> <span id="pEmail">Loading...</span></p>
+    <p><strong>Loan Amount:</strong> $<span id="pLoan">0</span></p>
+    <p><strong>Collateral (10%):</strong> $<span id="pCollateral">0</span></p>
+    <p><strong>BTC Equivalent:</strong> <span id="pBTC">0</span> BTC</p>
+  </div>
+  
+  <!-- COUNTDOWN TIMER -->
   <div class="countdown">
     <h2 id="timer">15:00</h2>
     <p>Time left to complete payment</p>
   </div>
-
+  
   <!-- UPLOAD RECEIPT -->
   <form action="https://formspree.io/f/xxxxabcd" method="POST" enctype="multipart/form-data">
     <input type="file" name="receipt" required>
@@ -58,6 +63,45 @@
 
 </section>
 
-<script src="payment.js"></script>
+<script>
+  // Copy BTC Address
+  function copyAddress() {
+    const addr = document.getElementById("btcAddress").innerText;
+    navigator.clipboard.writeText(addr);
+    alert("✅ Bitcoin address copied to clipboard!");
+  }
+
+  // Load payment info from localStorage
+  window.addEventListener("DOMContentLoaded", () => {
+    const loans = JSON.parse(localStorage.getItem("loans") || "[]");
+    if(loans.length > 0){
+      const lastLoan = loans[loans.length - 1];
+      document.getElementById("pName").innerText = lastLoan.name;
+      document.getElementById("pEmail").innerText = lastLoan.email;
+      document.getElementById("pLoan").innerText = lastLoan.amount;
+      document.getElementById("pCollateral").innerText = lastLoan.collateral;
+      const btc = (lastLoan.collateral / 20000).toFixed(6); // Example BTC rate
+      document.getElementById("pBTC").innerText = btc;
+    }
+    startCountdown(15*60); // 15-minute countdown
+  });
+
+  // Countdown timer
+  function startCountdown(seconds) {
+    const timerElem = document.getElementById("timer");
+    const interval = setInterval(() => {
+      const min = Math.floor(seconds / 60);
+      const sec = seconds % 60;
+      timerElem.innerText = `${min.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')}`;
+      if(seconds <= 0){
+        clearInterval(interval);
+        timerElem.innerText = "00:00";
+        alert("⏰ Payment window expired!");
+      }
+      seconds--;
+    }, 1000);
+  }
+</script>
+
 </body>
 </html>
